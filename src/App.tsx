@@ -30,9 +30,11 @@ const App = () => {
     );
     console.log(solution.current);
     console.log(solutionColourCount.current);
+    //eslint-disable-next-line
   }, [solution.current]);
 
   const restartGame = () => {
+    setGameEnd(false);
     solution.current = getSolution();
     setGuessCount(0);
     guessesMade.current = [];
@@ -50,7 +52,6 @@ const App = () => {
     if (redCount === 4) setGameEnd(true);
     const guessColourCount = Array<number>(6).fill(0);
     guess.forEach((colourIndex) => guessColourCount[colourIndex]++);
-    console.log(guessColourCount);
     const whiteCount =
       guessColourCount
         .map((colourCount, colourIndex) =>

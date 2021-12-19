@@ -1,9 +1,18 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
 import GuessSectionContainer from './components/guessSectionContainer';
 import HistoryContainer from './components/historyContainer';
+import SolutionContainer from './components/solutionContainer';
 import Guess from './interfaces/guess';
 
 export const GuessClickCallbackContext = createContext((guess: number[]) => {});
+
+const buttonStyle: React.CSSProperties = {
+  padding: '0.5rem',
+  margin: '0.5rem',
+  fontSize: '1rem',
+  background: '#FFFF88',
+  borderRadius: '1rem',
+};
 
 const getRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min)) + min;
@@ -19,6 +28,7 @@ const App = () => {
   const [guessKey, setKey] = useState(0);
   const [guessCount, setGuessCount] = useState(0);
   const [hasGameEnded, setGameEnd] = useState(false);
+  const [isSolutionShown, activateShowSolution] = useState(false);
   const solutionColourCount = useRef<number[]>(Array<number>(6).fill(0));
   const solution = useRef<number[]>(getSolution());
   const guessesMade = useRef<Guess[]>([]);
@@ -34,11 +44,16 @@ const App = () => {
   }, [solution.current]);
 
   const restartGame = () => {
+    activateShowSolution(false);
     setGameEnd(false);
     solution.current = getSolution();
     setGuessCount(0);
     guessesMade.current = [];
     setKey(Math.random());
+  };
+
+  const showSolution = () => {
+    activateShowSolution(true);
   };
 
   const onGuessClick = (guess: number[]) => {
@@ -68,12 +83,26 @@ const App = () => {
   return (
     <GuessClickCallbackContext.Provider value={onGuessClick}>
       <h1>Mastermind</h1>
+      <a href="https://www.github.com/woody-lam-cwl/react-ts-mastermind">
+        Github Repository
+      </a>
       <h2>
-        {hasGameEnded ? `You finished the game!` : `Guess Count: ${guessCount}`}
+        {hasGameEnded
+          ? `You finished the game in ${guessCount} guesses!`
+          : `Guess Count: ${guessCount}`}
       </h2>
-      <button onClick={restartGame}>Restart Game</button>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <GuessSectionContainer key={guessKey} />
+      <button style={buttonStyle} onClick={restartGame}>
+        Restart Game
+      </button>
+      <button style={buttonStyle} onClick={showSolution}>
+        Show Solution
+      </button>
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+        {isSolutionShown ? (
+          <SolutionContainer solution={solution.current} />
+        ) : (
+          <GuessSectionContainer key={guessKey} />
+        )}
         <HistoryContainer guessHistory={guessesMade.current} />
       </div>
     </GuessClickCallbackContext.Provider>

@@ -7,6 +7,14 @@ export const GuessOptionCallbackContext = createContext(
   (_colourIndex: number) => {}
 );
 
+const buttonStyle: React.CSSProperties = {
+  padding: '1rem',
+  margin: '0.5rem',
+  fontSize: '1rem',
+  background: '#88CC88',
+  borderRadius: '1rem',
+};
+
 const GuessSectionContainer = () => {
   const guessClickCallback = useContext(GuessClickCallbackContext);
   const [guess, setGuess] = useState([0, 0, 0, 0]);
@@ -26,16 +34,22 @@ const GuessSectionContainer = () => {
 
   return (
     <GuessOptionCallbackContext.Provider value={onGuessOptionClick}>
-      <div>
+      <div
+        style={{
+          margin: '0.5rem 0',
+          padding: '0.5rem 0 0.5rem 0.5rem',
+          border: '0.3rem solid #000000',
+          borderRadius: '1rem',
+        }}
+      >
         <GuessContainer size={6} guess={guess} />
         <GuessOptionsContainer />
-        <button onClick={() => guessClickCallback(guess)}>Make Guess</button>
-        <button onClick={onResetClick}>Reset Guess</button>
-        <div>
-          <a href="https://www.github.com/woody-lam-cwl/react-ts-mastermind">
-            Github Repository
-          </a>
-        </div>
+        <button style={buttonStyle} onClick={() => guessClickCallback(guess)}>
+          Make Guess
+        </button>
+        <button style={buttonStyle} onClick={onResetClick}>
+          Reset Guess
+        </button>
       </div>
     </GuessOptionCallbackContext.Provider>
   );
